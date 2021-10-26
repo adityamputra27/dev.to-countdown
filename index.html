@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="countdown-text">
+            <h1>Simple Countdown Using Vanilla Javascript</h1>
+        </div>
+        <div class="countdown">
+            <div class="countdown-box">
+                <p class="countdown-days">0</p>
+                <span>Hari</span>
+            </div>
+            <div class="countdown-box">
+                <p class="countdown-hours">0</p>
+                <span>Jam</span>
+            </div>
+            <div class="countdown-box">
+                <p class="countdown-minutes">0</p>
+                <span>Menit</span>
+            </div>
+            <div class="countdown-box">
+                <p class="countdown-seconds">0</p>
+                <span>Detik</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // dapatkan semua element countdown
+        const countdownDays = document.querySelector('.countdown-days')
+        const countdownHours = document.querySelector('.countdown-hours')
+        const countdownMinutes = document.querySelector('.countdown-minutes')
+        const countdownSeconds = document.querySelector('.countdown-seconds')
+
+        // waktu berakhir hitungan mundur
+        let timeOut = "2021-10-27 00:00:00"
+        // convert untuk mendapatkan nilai detik dengan timestamp waktu timeOut
+        let getDeadline = Math.floor(new Date(timeOut).getTime() / 1000)
+        // convert untuk mendapatkan nilai detik dengan timestamp sekarang
+        let now = Math.floor(Date.now() / 1000)
+        // dapatkan selisih detiknya
+        let seconds = getDeadline - now
+        
+        // jika jumlah selisih detiknya lebih dari 0
+        if (seconds > 0) {
+            // buat variable untuk mendapatkan rumus jumlah hari dengan membagi dari hasil jumlah detik dalam satu jam dikali dengan jumlah jam perharinya
+            let d = Math.floor(seconds / (3600*24));
+            // buat variable untuk mendapatkan rumus jumlah jam dengan sisa bagi dari hasil jumlah detik dalam satu jam dikali dengan jumlah jam perharinya dan dibagi jumlah detik dalam satu jam
+            let h = Math.floor(seconds % (3600*24) / 3600);
+            // buat variable untuk mendapatkan rumus jumlah menit dengan sisa bagi dari jumlah detik dalam satu jam dibagi dengan jumlah menit perjamnya
+            let m = Math.floor(seconds % 3600 / 60);
+            // buat variable untuk mendapatkan rumus jumlah detik dengan sisa bagi dari hasil jumlah menit perjamnya
+            let s = Math.floor(seconds % 60);
+
+            // buat fungsi agar digunakan nanti untuk realtimenya berjalan waktu dan dimana juga terdapat kondisi jika waktu tadi kurang dari 10 lalu
+            let setTimeElement = function() {
+                let setSecond = s < 10 ? '0' + s : s;
+                let setMinute = m < 10 ? '0' + m : m;
+                let setHour = h < 10 ? '0' + h : h;
+                let setDay = d < 10 ? '0' + d : d;
+
+                // tampilkan kedalam element HTML
+                countdownDays.innerHTML = setDay;
+                countdownHours.innerHTML = setHour;
+                countdownMinutes.innerHTML = setMinute;
+                countdownSeconds.innerHTML = setSecond;
+            }
+
+            // panggil fungsinya
+            setTimeElement();
+
+            // buat fungsi timer dimana ini untuk mengatur berjalannya waktu perdetiknya 
+            let timer = setInterval(function() {
+
+                // setiap detik fungsi ini berjalan lakukan decrement 1 kali untuk variable detik
+                s--;
+
+                // jika detik sudah ke angka 0
+                if (s < 0) {
+                    // maka set kembali detik ke 59
+                    s = 59;
+                    // lalu decrement kembali satu kali untuk variable menit
+                    m--;
+                    // jika menit sudah ke angka 0 
+                    if (m < 0) {
+                        // maka set kembali menit ke 59
+                        m = 59;
+                        // lalu decrement kembali satu kali untuk variable jam
+                        h--;
+                        // jika jam sudah ke angka 0 
+                        if (h < 0) {
+                            // maka set kembali jam ke 23
+                            h = 23;
+                            // lalu decrement kembali satu kali untuk variable hari
+                            d--;
+                            // jika hari sudah ke angka 0
+                            if (d < 0) {
+                                // maka hentikan timing nya dengan menggunakan clearInterval()
+                                clearInterval(timer);
+                            }
+                        }
+                    }
+                }
+
+                setTimeElement();
+            // set 1000 yaitu untuk satu detik (1000 ms = 1 s)
+            }, 1000);
+        } else {
+            // jika detik tidak tersisa atau sudah memenuhi hitungan mundur maka tampilkan 00 ke elemen HTML
+            countdownDays.innerHTML = '00';
+            countdownHours.innerHTML = '00';
+            countdownMinutes.innerHTML = '00';
+            countdownSeconds.innerHTML = '00';
+        }
+    </script>
+
+</body>
+</html>
